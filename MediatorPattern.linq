@@ -2,6 +2,9 @@
   <Reference>D:\GitHub\Chailease.Common\Chailease.Model\bin\Debug\Chailease.Model.dll</Reference>
   <Reference>D:\GitHub\Chailease.Common\Chailease.Utility\bin\Debug\Chailease.Utility.dll</Reference>
   <Namespace>Chailease.Utility.Helpers</Namespace>
+  <Namespace>System.Text.Json</Namespace>
+  <Namespace>System.Text.Encodings.Web</Namespace>
+  <Namespace>System.Text.Unicode</Namespace>
 </Query>
 
 void Main()
@@ -40,12 +43,23 @@ public class MemberService
 		SendLogEvent(login);
 	}
 }
+public static class ExtensionOfObject
+{
+	public static string ToJson<T>(this T model)
+	{
+		var options = new JsonSerializerOptions
+		{
+			Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
+		};
+		return JsonSerializer.Serialize(model, options);
+	}
+}
 
 public class LogService
 {
 	public void SendLog<T>(T model)
 	{
-		Console.WriteLine($"Log 寫入 {model}");
+		Console.WriteLine($"Log 寫入 {model.ToJson()}");
 	}
 }
 
