@@ -6,7 +6,6 @@
 
 void Main()
 {
-
 	MemberService service = new MemberService();
 	LogService logService = new LogService();
 	SendLogMediator mediator = new SendLogMediator(service, logService);
@@ -21,6 +20,7 @@ void Main()
 		Pwd = "5678"
 	});
 }
+
 public class SendLogMediator
 {
 	public SendLogMediator(MemberService memberService, LogService logService)
@@ -28,6 +28,7 @@ public class SendLogMediator
 		memberService.SendLogEvent += new MemberService.NumManipulationHandler(logService.SendLog);
 	}
 }
+
 public class MemberService
 {
 	public delegate void NumManipulationHandler(LoginModel login);
