@@ -6,8 +6,10 @@
 
 void Main()
 {
+
 	MemberService service = new MemberService();
-	service.ChangeNum += new MemberService.NumManipulationHandler(new LogEvent().SendLog);
+	LogService logService = new LogService();
+	SendLogMediator mediator = new SendLogMediator(service, logService);
 	service.Login(new LoginModel
 	{
 		Acc = "Tony",
@@ -19,23 +21,39 @@ void Main()
 		Pwd = "5678"
 	});
 }
+public class SendLogMediator
+{
+	public SendLogMediator(MemberService memberService, LogService logService)
+	{
+		_LogService = logService;
+		_MemberService = memberService;
+		memberService.SendLogEvent += new MemberService.NumManipulationHandler(_LogService.SendLog);
+	}
+	public LogService _LogService { get; set; }
+	public MemberService _MemberService { get; set; }
+
+	public void Work<T>(T model)
+	{
+		_LogService.SendLog(model);
+	}
+}
 public class MemberService
 {
 	public delegate void NumManipulationHandler(LoginModel login);
 
-	public event NumManipulationHandler ChangeNum;
+	public event NumManipulationHandler SendLogEvent;
 
 	public void Login(LoginModel login)
 	{
-		ChangeNum(login);
+		SendLogEvent(login);
 	}
 }
 
-public class LogEvent
+public class LogService
 {
-	public void SendLog(LoginModel login)
+	public void SendLog<T>(T model)
 	{
-		Console.WriteLine($"Log 寫入 Acc:{login.Acc} Pwd:{login.Pwd}");
+		Console.WriteLine($"Log 寫入 {model}");
 	}
 }
 
