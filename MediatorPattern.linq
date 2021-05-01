@@ -25,16 +25,7 @@ public class SendLogMediator
 {
 	public SendLogMediator(MemberService memberService, LogService logService)
 	{
-		_LogService = logService;
-		_MemberService = memberService;
-		memberService.SendLogEvent += new MemberService.NumManipulationHandler(_LogService.SendLog);
-	}
-	public LogService _LogService { get; set; }
-	public MemberService _MemberService { get; set; }
-
-	public void Work<T>(T model)
-	{
-		_LogService.SendLog(model);
+		memberService.SendLogEvent += new MemberService.NumManipulationHandler(logService.SendLog);
 	}
 }
 public class MemberService
